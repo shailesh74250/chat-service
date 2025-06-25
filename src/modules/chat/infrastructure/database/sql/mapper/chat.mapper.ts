@@ -21,6 +21,7 @@ export class ChatMapper {
     return {
       senderId: createUserDto.senderId,
       receiverId: createUserDto.receiverId,
+      groupId: createUserDto.groupId,
       content: createUserDto.content,
     };
   }
@@ -32,7 +33,7 @@ export class ChatMapper {
    * @returns The User domain entity
    */
   static toDomain(chatDbEntity: ChatDbEntity): Chat {
-    const { id, senderId, receiverId, content, createdAt, updatedAt } = chatDbEntity;
-    return new Chat(id, senderId, receiverId, content, createdAt, updatedAt);
+    const { id, senderId, receiverId, groupId, content, createdAt, updatedAt} = chatDbEntity;
+    return new Chat(id, senderId, receiverId, groupId, content, createdAt, updatedAt);
   }
 }

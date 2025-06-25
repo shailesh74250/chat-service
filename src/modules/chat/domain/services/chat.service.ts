@@ -1,41 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { CreateChatMessageDto } from '../dto/create-chat-message.dto';
-
-export interface ChatMessage {
-  id: string;
-  senderId: string;
-  receiverId?: string;
-  groupId?: string; // Made groupId optional
-  content: string;
-  timestamp: Date;
-}
+import { IChatRepository } from '../../infrastructure/database/chat.repository.interface';
+import { Chat } from '../entities/chat.entity';
 
 @Injectable()
 export class ChatService {
-  private messages: ChatMessage[] = [];
+  constructor(
+    @Inject('IChatRepository')
+    private readonly chatRepository: IChatRepository,
+  ) {}
 
-  async sendMessage(dto: CreateChatMessageDto): Promise<ChatMessage> {
-    // Allow either receiverId (for 1-1) or groupId (for group chat)
+  async sendMessage(dto: CreateChatMessageDto): Promise<Chat> {
     if (!dto.receiverId && !dto.groupId) {
       throw new Error('Either receiverId or groupId is required');
     }
-
-    const message: ChatMessage = {
-      id: Date.now().toString(),
-      senderId: dto.senderId,
-      receiverId: dto.receiverId,
-      groupId: dto.groupId,
-      content: dto.content,
-      timestamp: new Date(),
-    };
-
-    this.messages.push(message); // Save message to in-memory array
-
-    return message;
+    // Store chat in DB
+    return this.chatRepository.createChat(dto);
   }
 
-  async getMessagesForUser(userId: string): Promise<ChatMessage[]> {
-    return this.messages.filter(
+  async getMessagesForUser(userId: string): Promise<Chat[]> {
+    // Fetch all chats where user is sender or receiver
+    const allChats = await this.chatRepository.getAllChats();
+    return allChats.filter(
       (msg) => msg.senderId === userId || msg.receiverId === userId,
     );
   }

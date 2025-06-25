@@ -13,7 +13,7 @@ import {
  * @extends Model
  */
 @Table({
-  tableName: 'users',
+  tableName: 'chat',
   timestamps: true,
 })
 export class ChatDbEntity extends Model<ChatDbEntity> {
@@ -54,6 +54,19 @@ export class ChatDbEntity extends Model<ChatDbEntity> {
     unique: true,
   })
   receiverId: string;
+
+  /**
+   * The email of the user.
+   *
+   * @column
+   * @type {string}
+   */
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    unique: true,
+  })
+  groupId: string;
 
   /**
    * The password of the user.

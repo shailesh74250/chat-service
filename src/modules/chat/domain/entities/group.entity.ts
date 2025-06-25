@@ -1,9 +1,9 @@
 /**
- * Chat entity representing a user in the domain layer.
+ * User entity representing a user in the domain layer.
  *
- * @class Chat
+ * @class User
  */
-export class Chat {
+export class Group {
   /**
    * The unique identifier of the user.
    *
@@ -13,32 +13,17 @@ export class Chat {
 
   /**
    * The name of the user.
-   * (from User Service)
-   * @type {string}
-   */
-  senderId: string; 
-
-  /**
-   * The email of the user.
-   * (from User Service, nullable)
-   * @type {string}
-   */
-  receiverId: string;
-
-  /**
-   * The password of the user.
-   *(FK → Group.id, nullable)
-   * @type {string}
-   */
-  groupId: string;
-
-  /**
-   * The password of the user.
    *
    * @type {string}
    */
-  content: string;
+  name: string;
 
+  /**
+   * The email of the user.
+   *
+   * @type {string}
+   */
+  description: string;
 
   /**
    * The date and time when the user was created.
@@ -58,27 +43,21 @@ export class Chat {
    * Constructs a new instance of the User entity.
    *
    * @param id - The unique identifier of the user
-   * @param senderId - The name of the user
-   * @param receiverId - The email of the user
-   * @param groupId - The password of the user
-   * @param content - The content of the chat message
+   * @param name - The name of the user
+   * @param description - The email of the user
    * @param createdAt - The date and time when the user was created
    * @param updatedAt - The date and time when the user was last updated
    */
   constructor(
     id: string,
-    senderId: string,
-    receiverId: string,
-    groupId: string,
-    content: string,
+    name: string,
+    description: string,
     createdAt: Date,
     updatedAt: Date,
   ) {
     this.id = id;
-    this.senderId = senderId;
-    this.receiverId = receiverId;
-    this.groupId = groupId;
-    this.content = content;
+    this.name = name;
+    this.description = description;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }

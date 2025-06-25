@@ -14,8 +14,8 @@ import { ChatMapper } from './../mapper/chat.mapper';
 @Injectable()
 export class ChatRepository implements IChatRepository {
   constructor(
-    @Inject('UserDbEntity')
-    private readonly userModel: typeof ChatDbEntity,
+    @Inject('ChatDbEntity')
+    private readonly chatModel: typeof ChatDbEntity,
   ) {}
 
   /**
@@ -26,7 +26,7 @@ export class ChatRepository implements IChatRepository {
    */
   async createChat(createUserDto: CreateChatMessageDto): Promise<Chat> {
     const userDbEntity = ChatMapper.toDbEntityFromCreateDto(createUserDto);
-    const user = await this.userModel.create(userDbEntity as ChatDbEntity);
+    const user = await this.chatModel.create(userDbEntity as ChatDbEntity);
     return ChatMapper.toDomain(user);
   }
 
@@ -36,7 +36,7 @@ export class ChatRepository implements IChatRepository {
    * @returns An array of users
    */
   async getAllChats(): Promise<Chat[]> {
-    const users = await this.userModel.findAll();
+    const users = await this.chatModel.findAll();
     return users.map((user) => ChatMapper.toDomain(user));
   }
 
@@ -47,7 +47,7 @@ export class ChatRepository implements IChatRepository {
    * @returns The user with the specified ID
    */
   async getChatById(id: string): Promise<Chat> {
-    const user = await this.userModel.findByPk(id);
+    const user = await this.chatModel.findByPk(id);
     if (!user) {
       throw new Error(`User with ID ${id} not found`);
     }
@@ -63,7 +63,7 @@ export class ChatRepository implements IChatRepository {
    */
   async updateChat(id: string, updateUserDto: CreateChatMessageDto): Promise<Chat> {
     const userDbEntity = ChatMapper.toDbEntityFromCreateDto(updateUserDto);
-    const [numberOfAffectedRows, [updatedUser]] = await this.userModel.update(
+    const [numberOfAffectedRows, [updatedUser]] = await this.chatModel.update(
       userDbEntity,
       {
         where: { id },
@@ -82,7 +82,7 @@ export class ChatRepository implements IChatRepository {
    * @param id - The ID of the user to delete
    */
   async deleteChat(id: string): Promise<void> {
-    const result = await this.userModel.destroy({ where: { id } });
+    const result = await this.chatModel.destroy({ where: { id } });
     if (result === 0) {
       throw new Error(`User with ID ${id} not found`);
     }
